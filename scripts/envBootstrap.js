@@ -38,7 +38,7 @@ const bool = (k, d = false) => {
 export const ENV = {
   /* ---------------- Core ---------------- */
   core: {
-    NODE_ENV: req("NODE_ENV"),
+    NODE_ENV: opt("NODE_ENV", "production"),
     PORT: num("PORT", 3000),
     LOG_LEVEL: opt("LOG_LEVEL", "info"),
     APP_TITLE: req("APP_TITLE"),
