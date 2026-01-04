@@ -1,0 +1,47 @@
+name: CI – Env hygiene & build
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  env-hygiene:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      # ------------------------------------------------------------
+      # ENV discipline: application code only
+      # ------------------------------------------------------------
+      - name: Enforce ENV-only access
+        run: |
+          echo "🔍 Checking for illegal process.env usage (application code only)"
+
+          if grep -R "process\.env" \
+            services routes server.js \
+            --include="*.js" \
+            --exclude="**/node_modules/**"; then
+
+            echo "❌ process.env usage found outside envBootstrap.js"
+            exit 1
+          else
+            echo "✅ ENV-only rule passed"
+          fi
+
+      # ------------------------------------------------------------
+      # Validate ENV schema (bootstrap-only)
+      # ------------------------------------------------------------
+      - name: Validate environment schema
+        run: node scripts/envBootstrap.js
