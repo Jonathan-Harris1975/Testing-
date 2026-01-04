@@ -1,15 +1,16 @@
+import { ENV } from "../../../scripts/envBootstrap.js";
 import axios from "axios";
 
 /* ============================================================
    🔑 ENV KEYS
 ============================================================ */
-const SERP_API_KEY = process.env.API_SERP_KEY;
-const OPENPAGERANK_KEY = process.env.API_OPENPAGERANK_KEY;
+const SERP_API_KEY = ENV.outreach.API_SERP_KEY;
+const OPENPAGERANK_KEY = ENV.outreach.API_OPENPAGERANK_KEY;
 
-const KEY_URLSCAN = process.env.API_URLSCAN_KEY;
-const KEY_PROSPEO = process.env.API_PROSPEO_KEY;
-const KEY_HUNTER = process.env.API_HUNTER_KEY;
-const KEY_APOLLO = process.env.API_APOLLO_KEY;
+const KEY_URLSCAN = ENV.outreach.API_URLSCAN_KEY;
+const KEY_PROSPEO = ENV.outreach.API_PROSPEO_KEY;
+const KEY_HUNTER = ENV.outreach.API_HUNTER_KEY;
+const KEY_APOLLO = ENV.outreach.API_APOLLO_KEY;
 
 /* ============================================================
    ⏱️ RATE CONTROL
