@@ -3,6 +3,7 @@
 // 🎚 Podcast Processor — Clean Final Version (Fully Updated)
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import { spawn } from "node:child_process";
 import { info, warn, error, debug } from "../../../logger.js";
 import { putObject } from "../../shared/utils/r2-client.js";
@@ -81,11 +82,11 @@ function cleanup(files) {
 async function updateMetaFile(sessionId, finalBuffer, finalPath, podcastUrl) {
   const metaKey = `${sessionId}.json`;
 
-  const metaBase = process.env.R2_PUBLIC_BASE_URL_META || "";
-  const artBase = process.env.R2_PUBLIC_BASE_URL_ART || "";
+  const metaBase = ENV.R2_PUBLIC_BASE_URL_META || "";
+  const artBase = ENV.R2_PUBLIC_BASE_URL_ART || "";
   const transcriptBase =
-    process.env.R2_PUBLIC_BASE_URL_TRANSCRIPT ||
-    process.env.R2_PUBLIC_BASE_URL_RAW_TEXT ||
+    ENV.R2_PUBLIC_BASE_URL_TRANSCRIPT ||
+    ENV.R2_PUBLIC_BASE_URL_RAW_TEXT ||
     "";
 
   const metaUrl = metaBase ? `${metaBase}/${metaKey}` : "";
@@ -159,7 +160,7 @@ async function updateMetaFile(sessionId, finalBuffer, finalPath, podcastUrl) {
 export async function podcastProcessor(sessionId, editedBufferIgnored) {
   info("🎚 Fetching edited audio from R2", { sessionId });
 
-  const editedUrl = `${process.env.R2_PUBLIC_BASE_URL_EDITED_AUDIO}/${sessionId}_edited.mp3`;
+  const editedUrl = `${ENV.R2_PUBLIC_BASE_URL_EDITED_AUDIO}/${sessionId}_edited.mp3`;
 
   const res = await fetch(editedUrl);
   if (!res.ok) throw new Error("Failed to fetch edited audio from R2");
@@ -168,8 +169,8 @@ export async function podcastProcessor(sessionId, editedBufferIgnored) {
 
   info("🎧 Retrieved edited audio", { sessionId });
 
-  const introUrl = process.env.PODCAST_INTRO_URL;
-  const outroUrl = process.env.PODCAST_OUTRO_URL;
+  const introUrl = ENV.PODCAST_INTRO_URL;
+  const outroUrl = ENV.PODCAST_OUTRO_URL;
 
   const intro = `${TMP_DIR}/${sessionId}_intro.mp3`;
   const main = `${TMP_DIR}/${sessionId}_main.mp3`;
@@ -201,7 +202,7 @@ file '${outro}'
   const finalBuffer = fs.readFileSync(final);
 
   const podcastKey = `${sessionId}.mp3`;
-  const podcastUrl = `${process.env.R2_PUBLIC_BASE_URL_PODCAST}/${podcastKey}`;
+  const podcastUrl = `${ENV.R2_PUBLIC_BASE_URL_PODCAST}/${podcastKey}`;
 
   await safePutObject("podcast", podcastKey, finalBuffer, "audio/mpeg");
 

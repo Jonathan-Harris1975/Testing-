@@ -3,6 +3,7 @@
 // Supports mixing remote URLs + local batch files safely
 // =======================================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import fs from "fs";
 import path from "path";
 import { spawn } from "child_process";
@@ -17,13 +18,13 @@ const MERGED_BUCKET = "merged";
 // ------------------------------------------------------------
 // ⚙️ Environment-based tuning
 // ------------------------------------------------------------
-const DOWNLOAD_TIMEOUT_MS = Number(process.env.AI_TIMEOUT || 30000);
-const MAX_RETRIES = Number(process.env.MAX_CHUNK_RETRIES || 3);
+const DOWNLOAD_TIMEOUT_MS = Number(ENV.AI_TIMEOUT || 30000);
+const MAX_RETRIES = Number(ENV.MAX_CHUNK_RETRIES || 3);
 const DOWNLOAD_RETRIES = MAX_RETRIES;
 const MERGE_RETRIES = MAX_RETRIES;
-const RETRY_DELAY_MS = Number(process.env.RETRY_DELAY_MS || 2000);
+const RETRY_DELAY_MS = Number(ENV.RETRY_DELAY_MS || 2000);
 const RETRY_BACKOFF_MULTIPLIER =
-  Number(process.env.RETRY_BACKOFF_MULTIPLIER || 2);
+  Number(ENV.RETRY_BACKOFF_MULTIPLIER || 2);
 
 // Merge smaller groups recursively
 const BATCH_SIZE = 2;

@@ -9,6 +9,7 @@
 // • R2 upload for successful chunks
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import {
   PollyClient,
   SynthesizeSpeechCommand,
@@ -20,16 +21,16 @@ import pLimit from "p-limit";
 // ------------------------------------------------------------
 // ⚙️ Configuration
 // ------------------------------------------------------------
-const REGION = process.env.AWS_REGION;
-const VOICE_ID = process.env.POLLY_VOICE_ID;
-const CHUNKS_BUCKET = process.env.R2_BUCKET_CHUNKS;
-const PUBLIC_CHUNKS_BASE = process.env.R2_PUBLIC_BASE_URL_CHUNKS;
+const REGION = ENV.AWS_REGION;
+const VOICE_ID = ENV.POLLY_VOICE_ID;
+const CHUNKS_BUCKET = ENV.R2_BUCKET_CHUNKS;
+const PUBLIC_CHUNKS_BASE = ENV.R2_PUBLIC_BASE_URL_CHUNKS;
 
-const MAX_CHARS = Number(process.env.MAX_POLLY_NATURAL_CHUNK_CHARS) || 2500;
-const CONCURRENCY = Number(process.env.TTS_CONCURRENCY) || 3;
-const MAX_CHUNK_RETRIES = Number(process.env.MAX_CHUNK_RETRIES) || 4;
-const RETRY_DELAY_MS = Number(process.env.RETRY_DELAY_MS) || 1200;
-const RETRY_BACKOFF_MULTIPLIER = Number(process.env.RETRY_BACKOFF_MULTIPLIER) || 2.1;
+const MAX_CHARS = Number(ENV.MAX_POLLY_NATURAL_CHUNK_CHARS) || 2500;
+const CONCURRENCY = Number(ENV.TTS_CONCURRENCY) || 3;
+const MAX_CHUNK_RETRIES = Number(ENV.MAX_CHUNK_RETRIES) || 4;
+const RETRY_DELAY_MS = Number(ENV.RETRY_DELAY_MS) || 1200;
+const RETRY_BACKOFF_MULTIPLIER = Number(ENV.RETRY_BACKOFF_MULTIPLIER) || 2.1;
 
 const polly = new PollyClient({ region: REGION });
 
