@@ -4,6 +4,7 @@
 // Uses the *metasystem* bucket exclusively for episode counter
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import { log } from "../../../logger.js";
 import { getObjectAsText, putJson } from "../../shared/utils/r2-client.js";
 
@@ -14,7 +15,7 @@ const EPISODE_COUNTER_BUCKET = "metasystem";
 const EPISODE_COUNTER_KEY = "episode-counter.json";
 
 function isProductionEpisodeMode() {
-  return process.env.PODCAST_RSS_EP === "Yes";
+  return ENV.PODCAST_RSS_EP === "Yes";
 }
 
 // Load counter
@@ -44,7 +45,7 @@ async function saveCounter(counter) {
 export async function getNextEpisodeNumber() {
   if (!isProductionEpisodeMode()) {
     log.info("episodeCounter: test mode active, not touching persistent counter", {
-      PODCAST_RSS_EP: process.env.PODCAST_RSS_EP,
+      PODCAST_RSS_EP: ENV.PODCAST_RSS_EP,
     });
     return null;
   }

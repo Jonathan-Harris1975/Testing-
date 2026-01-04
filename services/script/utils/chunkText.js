@@ -9,6 +9,7 @@
 // - Comprehensive edge case handling
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import { info, debug } from "../../../logger.js";
 
 /**
@@ -17,7 +18,7 @@ import { info, debug } from "../../../logger.js";
  * @param {number} maxChars - Maximum characters per chunk (AWS Polly Natural limit: 6000)
  * @returns {string[]} Array of text chunks
  */
-export default function chunkText(text, maxChars = Number(process.env.MAX_POLLY_NATURAL_CHUNK_CHARS || 5800)) {
+export default function chunkText(text, maxChars = Number(ENV.MAX_POLLY_NATURAL_CHUNK_CHARS || 5800)) {
   // Input validation
   if (!text || typeof text !== "string") return [];
   if (text.trim().length === 0) return [];

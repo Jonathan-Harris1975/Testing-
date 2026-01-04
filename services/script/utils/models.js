@@ -3,6 +3,7 @@
 //   stored in raw-text bucket with public URLs for TTS
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import { resilientRequest } from "../../shared/utils/ai-service.js";
 import {
   getIntroPrompt,
@@ -150,7 +151,7 @@ export async function generateComposedEpisode(sessionIdLike) {
   const rawTranscript = [intro, "", main, "", outro].join("\n");
   const edited = editAndFormat(rawTranscript);
 
-  const maxBytes = Number(process.env.MAX_SSML_CHUNK_BYTES || 4200);
+  const maxBytes = Number(ENV.MAX_SSML_CHUNK_BYTES || 4200);
   const byteLen = (s) => Buffer.byteLength(s, "utf8");
   let ttsChunks = chunkText(edited, maxBytes);
 

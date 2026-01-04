@@ -1,4 +1,5 @@
 // services/script/utils/getWeatherSummary.js
+import { ENV } from "../../../scripts/envBootstrap.js";
 import fetch from "node-fetch";
 import { info, error , debug} from "../../../logger.js";
 
@@ -8,8 +9,8 @@ import { info, error , debug} from "../../../logger.js";
  * If the API fails, returns a stable, safe fallback.
  */
 export async function getWeatherSummary() {
-  const apiKey = process.env.RAPIDAPI_KEY;
-  const apiHost = process.env.RAPIDAPI_HOST || "weatherapi-com.p.rapidapi.com";
+  const apiKey = ENV.RAPIDAPI_KEY;
+  const apiHost = ENV.RAPIDAPI_HOST || "weatherapi-com.p.rapidapi.com";
   const location = "London";
 
   try {
