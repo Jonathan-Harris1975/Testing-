@@ -24,56 +24,46 @@ import { log } from "../../../logger.js";
 // ------------------------------------------------------------
 // 🔧 Environment Variables
 // ------------------------------------------------------------
-const {
-  // Core creds
-  R2_ACCESS_KEY_ID,
-  R2_SECRET_ACCESS_KEY,
-  R2_ENDPOINT,
-  R2_REGION,
+// ------------------------------------------------------------
+// 🔐 Resolved config (Phase 4)
+// ------------------------------------------------------------
+//
+// ENV is the only source of truth. We keep local constants with the
+// previous names to avoid refactoring the rest of this module.
+//
+const R2_ACCESS_KEY_ID = ENV.r2.accessKeyId;
+const R2_SECRET_ACCESS_KEY = ENV.r2.secretAccessKey;
+const R2_ENDPOINT = ENV.r2.endpoint;
+const R2_REGION = ENV.r2.region;
 
-  // Buckets
-  R2_BUCKET_PODCAST,
-  R2_BUCKET_RAW,
-  R2_BUCKET_RAW_TEXT,
-  R2_BUCKET_META,
-  R2_BUCKET_MERGED,
-  R2_BUCKET_ART,
-  R2_BUCKET_RSS_FEEDS,            // newsletter RSS
-  R2_BUCKET_PODCAST_RSS_FEEDS,    // podcast-specific RSS
-  R2_BUCKET_TRANSCRIPTS,
-  R2_BUCKET_CHUNKS,
-  R2_BUCKET_EDITED_AUDIO,
+// Buckets (authoritative)
+const R2_BUCKET_PODCAST = ENV.r2.buckets.podcast;
+const R2_BUCKET_RAW = ENV.r2.buckets.chunks; // compat alias (raw audio bucket)
+const R2_BUCKET_RAW_TEXT = ENV.r2.buckets.rawText;
+const R2_BUCKET_META = ENV.r2.buckets.meta;
+const R2_BUCKET_MERGED = ENV.r2.buckets.merged;
+const R2_BUCKET_ART = ENV.r2.buckets.art;
+const R2_BUCKET_RSS_FEEDS = ENV.r2.buckets.rss;
+const R2_BUCKET_PODCAST_RSS_FEEDS = ENV.r2.buckets.podcastRss;
+const R2_BUCKET_TRANSCRIPTS = ENV.r2.buckets.transcripts;
+const R2_BUCKET_CHUNKS = ENV.r2.buckets.chunks;
+const R2_BUCKET_EDITED_AUDIO = ENV.r2.buckets.edited;
+const R2_BUCKET_META_SYSTEM = ENV.r2.buckets.metaSystem;
 
-  // Legacy/compat (read-only)
-  R2_BUCKET_PODCAST_OUTPUT,
+// Legacy/compat (read-only)
+const R2_BUCKET_PODCAST_OUTPUT = ENV.r2.buckets.podcast;
+const R2_BUCKET_RAW_TEXT_INPUT = ENV.r2.buckets.rawText;
 
-  // Legacy/compat (read-only)
-  R2_BUCKET_RAW_TEXT_INPUT,
+// Public URLs
+const R2_PUBLIC_BASE_URL_PODCAST = ENV.r2.publicBase.podcast;
+const R2_PUBLIC_BASE_URL_RAW_TEXT = ENV.r2.publicBase.rawText;
+const R2_PUBLIC_BASE_URL_META = ENV.r2.publicBase.meta;
+const R2_PUBLIC_BASE_URL_MERGE = ENV.r2.publicBase.merged;
+const R2_PUBLIC_BASE_URL_ART = ENV.r2.publicBase.art;
+const R2_PUBLIC_BASE_URL_RSS = ENV.r2.publicBase.rss;
+const R2_PUBLIC_BASE_URL_PODCAST_RSS = ENV.r2.publicBase.podcastRss;
+const R2_PUBLIC_BASE_URL_TRANSCRIPT = ENV.r2.publicBase.transcript;
 
-  // NEW — metasystem bucket for episode counter
-  R2_BUCKET_META_SYSTEM,
-
-  // Public URLs
-  R2_PUBLIC_BASE_URL_PODCAST,
-  R2_PUBLIC_BASE_URL_RAW_TEXT,
-  R2_PUBLIC_BASE_URL_META,
-  R2_PUBLIC_BASE_URL_MERGE,
-  R2_PUBLIC_BASE_URL_ART,
-  R2_PUBLIC_BASE_URL_RSS,
-  R2_PUBLIC_BASE_URL_PODCAST_RSS,
-  R2_PUBLIC_BASE_URL_TRANSCRIPT,
-  R2_PUBLIC_BASE_URL_CHUNKS,
-  R2_PUBLIC_BASE_URL_EDITED_AUDIO,
-
-  // NEW — metasystem public URL (optional)
-  R2_PUBLIC_BASE_URL_META_SYSTEM,
-
-  // Legacy/compat (read-only)
-  R2_PUBLIC_BASE_URL_RSS_FEEDS,
-
-  // Legacy/compat (read-only)
-  R2_PUBLIC_BASE_URL_PODCAST_OUTPUT,
-} = ENV;
 
 // ------------------------------------------------------------
 // 🧠 Initialize Client
