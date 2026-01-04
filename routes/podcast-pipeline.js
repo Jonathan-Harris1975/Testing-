@@ -3,15 +3,16 @@
 // Runs: script/orchestrate -> tts -> artwork/generate
 // ============================================================
 
+import { ENV } from "../scripts/envBootstrap.js";
 import express from "express";
 import { info, error } from "../logger.js";
 
 const router = express.Router();
 
 function baseUrl() {
-  const port = process.env.PORT || 3000;
-  const host = process.env.INTERNAL_BASE_HOST || "127.0.0.1";
-  const proto = process.env.INTERNAL_BASE_PROTO || "http";
+  const port = ENV.PORT || 3000;
+  const host = ENV.INTERNAL_BASE_HOST || "127.0.0.1";
+  const proto = ENV.INTERNAL_BASE_PROTO || "http";
   return `${proto}://${host}:${port}`;
 }
 
