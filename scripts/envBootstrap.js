@@ -29,7 +29,9 @@ const num = (k, d = undefined) => {
 
 const bool = (k, d = false) => {
   const raw = opt(k, d);
-  return ["1", "true", "yes", "on", "y"].includes(String(raw).toLowerCase());
+  return ["1", "true", "yes", "on", "y"].includes(
+    String(raw).toLowerCase()
+  );
 };
 
 /* ============================================================
@@ -41,8 +43,9 @@ export const ENV = {
     NODE_ENV: opt("NODE_ENV", "production"),
     PORT: num("PORT", 3000),
     LOG_LEVEL: opt("LOG_LEVEL", "info"),
-    APP_TITLE: req("APP_TITLE"),
-    APP_URL: req("APP_URL"),
+
+    APP_TITLE: opt("APP_TITLE", "AI Management Suite"),
+    APP_URL: opt("APP_URL"),
 
     DEBUG_ROUTES: bool("DEBUG_ROUTES", false),
     AUTO_CALL: opt("AUTO_CALL", "yes"),
@@ -99,6 +102,7 @@ export const ENV = {
     AUTHOR: req("PODCAST_AUTHOR"),
     DESCRIPTION: req("PODCAST_DESCRIPTION"),
     LINK: req("PODCAST_LINK"),
+
     LANGUAGE: opt("PODCAST_LANGUAGE", "en-uk"),
     EXPLICIT: bool("PODCAST_EXPLICIT", false),
 
@@ -142,13 +146,13 @@ export const ENV = {
     },
 
     funding: {
-      TEXT: req("funding_text"),
-      URL: req("funding_url"),
+      TEXT: opt("funding_text"),
+      URL: opt("funding_url"),
     },
 
     itunes: {
-      TYPE: req("itunes_type"),
-      KEYWORDS: req("itunes_keywords"),
+      TYPE: opt("itunes_type"),
+      KEYWORDS: opt("itunes_keywords"),
     },
   },
 
@@ -159,8 +163,8 @@ export const ENV = {
     FEED_FRESHNESS_HOURS: num("FEED_FRESHNESS_HOURS", 24),
     FEED_RETENTION_DAYS: num("FEED_RETENTION_DAYS", 60),
 
-    TITLE: req("RSS_FEED_TITLE"),
-    DESCRIPTION: req("RSS_FEED_DESCRIPTION"),
+    TITLE: opt("RSS_FEED_TITLE"),
+    DESCRIPTION: opt("RSS_FEED_DESCRIPTION"),
 
     MIN_SOURCE_CHARS: num("RSS_MIN_SOURCE_CHARS", 220),
     TOPIC_GUARD_MIN_SHARED: num("RSS_TOPIC_GUARD_MIN_SHARED", 2),
