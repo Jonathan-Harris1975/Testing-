@@ -9,8 +9,7 @@ import { ENV } from "../../../scripts/envBootstrap.js";
 import fs from "fs";
 import path from "path";
 import { info, error } from "../../../logger.js";
-import { getObjectAsText, putJson } from "../../shared/utils/r2-client.js";
-
+import {  getObjectAsText, putJson,} from "../../shared/utils/r2-client.js";
 const R2_BUCKET = ENV.R2_BUCKET_RSS_FEEDS || "rss-feeds";
 
 const ROTATION_FILE = "data/feed-rotation.json";
