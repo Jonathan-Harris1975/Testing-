@@ -29,7 +29,7 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ ok: false, error: "Internal error" });
 });
 
-// Koyeb requires PORT (read via envBootstrap)
+// Koyeb requires ENV.core.PORT
 const PORT = ENV.core.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
