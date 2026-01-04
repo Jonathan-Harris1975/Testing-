@@ -20,6 +20,7 @@
 //   - rawRequest(path, options?)
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import crypto from "node:crypto";
 import { info, warn, error, debug } from "../../../logger.js";
 
@@ -28,10 +29,10 @@ const log = { info, warn, error, debug };
 
 const API_BASE = "https://api.podcastindex.org/api/1.0";
 
-const API_KEY = process.env.API_KEY_PODCAST_INDEX || "";
-const API_SECRET = process.env.API_SECRET_PODCAST_INDEX || "";
+const API_KEY = ENV.API_KEY_PODCAST_INDEX || "";
+const API_SECRET = ENV.API_SECRET_PODCAST_INDEX || "";
 const USER_AGENT =
-  process.env.PODCASTINDEX_USER_AGENT ||
+  ENV.PODCASTINDEX_USER_AGENT ||
   "TuringTorch/1.0 (+https://jonathan-harris.online)";
 
 function ensureConfig() {

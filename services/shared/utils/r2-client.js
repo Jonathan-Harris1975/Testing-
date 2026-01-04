@@ -11,6 +11,7 @@
 //   • Backwards-compatible aliases for ALL services
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import {
   S3Client,
   PutObjectCommand,
@@ -72,7 +73,7 @@ const {
 
   // Legacy/compat (read-only)
   R2_PUBLIC_BASE_URL_PODCAST_OUTPUT,
-} = process.env;
+} = ENV;
 
 // ------------------------------------------------------------
 // 🧠 Initialize Client

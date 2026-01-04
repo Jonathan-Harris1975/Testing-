@@ -1,10 +1,11 @@
+import { ENV } from "../../../scripts/envBootstrap.js";
 export const aiConfig = {
   models: {
-    google: { name: process.env.OPENROUTER_GOOGLE, apiKey: process.env.OPENROUTER_API_KEY_GOOGLE },
-    chatgpt: { name: process.env.OPENROUTER_CHATGPT, apiKey: process.env.OPENROUTER_API_KEY_CHATGPT },
-    deepseek: { name: process.env.OPENROUTER_DEEPSEEK, apiKey: process.env.OPENROUTER_API_KEY_DEEPSEEK },
-    anthropic: { name: process.env.OPENROUTER_ANTHROPIC, apiKey: process.env.OPENROUTER_API_KEY_ANTHROPIC },
-    meta: { name: process.env.OPENROUTER_META, apiKey: process.env.OPENROUTER_API_KEY_META },
+    google: { name: ENV.OPENROUTER_GOOGLE, apiKey: ENV.OPENROUTER_API_KEY_GOOGLE },
+    chatgpt: { name: ENV.OPENROUTER_CHATGPT, apiKey: ENV.OPENROUTER_API_KEY_CHATGPT },
+    deepseek: { name: ENV.OPENROUTER_DEEPSEEK, apiKey: ENV.OPENROUTER_API_KEY_DEEPSEEK },
+    anthropic: { name: ENV.OPENROUTER_ANTHROPIC, apiKey: ENV.OPENROUTER_API_KEY_ANTHROPIC },
+    meta: { name: ENV.OPENROUTER_META, apiKey: ENV.OPENROUTER_API_KEY_META },
   },
 
   routeModels: {
@@ -36,8 +37,8 @@ export const aiConfig = {
   commonParams: { temperature: 0.85, timeout: 45000 },
 
   headers: {
-    "HTTP-Referer": process.env.APP_URL || "http://localhost:3000",
-    "X-Title": process.env.APP_TITLE || "Podcast Script Generation",
+    "HTTP-Referer": ENV.APP_URL || "http://localhost:3000",
+    "X-Title": ENV.APP_TITLE || "Podcast Script Generation",
   },
 };
 
