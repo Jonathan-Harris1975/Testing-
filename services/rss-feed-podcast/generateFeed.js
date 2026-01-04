@@ -11,6 +11,7 @@
 // ✔ Supplies podcast:guid, podcast:locked, generator to XML builder
 // ============================================================
 
+import { ENV } from "../../scripts/envBootstrap.js";
 import { buildRssXml } from "./xmlBuilder.js";
 import { R2_PUBLIC_BASE_URL_RSS_RESOLVED } from "../shared/utils/r2-client.js";
 import { info, warn } from "../../logger.js";
@@ -30,58 +31,58 @@ export function generateFeedXML(episodesMeta) {
   info(`📝 Building RSS feed with ${sorted.length} episode(s)`);
 
   // Map show-level env vars
-  const rawLang = (process.env.PODCAST_LANGUAGE || "en-gb")
+  const rawLang = (ENV.PODCAST_LANGUAGE || "en-gb")
     .trim()
     .toLowerCase();
   const language = rawLang === "en-uk" ? "en-gb" : rawLang;
 
   // Podcast locked: default "yes" unless explicitly "no"
-  const lockedRaw = String(process.env.PODCAST_LOCKED || "yes").trim().toLowerCase();
+  const lockedRaw = String(ENV.PODCAST_LOCKED || "yes").trim().toLowerCase();
   const podcastLocked = lockedRaw === "no" ? "no" : "yes";
 
   const channel = {
-    title: process.env.PODCAST_TITLE || "Podcast",
-    link: stripQuotes(process.env.PODCAST_LINK || ""),
-    description: process.env.PODCAST_DESCRIPTION || "",
+    title: ENV.PODCAST_TITLE || "Podcast",
+    link: stripQuotes(ENV.PODCAST_LINK || ""),
+    description: ENV.PODCAST_DESCRIPTION || "",
     language,
-    copyright: process.env.PODCAST_COPYRIGHT || "",
-    itunesAuthor: process.env.PODCAST_AUTHOR || "",
-    itunesExplicit: process.env.PODCAST_EXPLICIT || "no",
-    itunesType: process.env.itunes_type || "episodic",
-    itunesKeywords: process.env.itunes_keywords || "",
-    ownerName: process.env.PODCAST_OWNER_NAME || "",
-    ownerEmail: process.env.PODCAST_OWNER_EMAIL || "",
-    imageUrl: process.env.PODCAST_IMAGE_URL || "",
+    copyright: ENV.PODCAST_COPYRIGHT || "",
+    itunesAuthor: ENV.PODCAST_AUTHOR || "",
+    itunesExplicit: ENV.PODCAST_EXPLICIT || "no",
+    itunesType: ENV.itunes_type || "episodic",
+    itunesKeywords: ENV.itunes_keywords || "",
+    ownerName: ENV.PODCAST_OWNER_NAME || "",
+    ownerEmail: ENV.PODCAST_OWNER_EMAIL || "",
+    imageUrl: ENV.PODCAST_IMAGE_URL || "",
     categories: [
-      process.env.PODCAST_CATEGORY_1 || "",
-      process.env.PODCAST_CATEGORY_2 || ""
+      ENV.PODCAST_CATEGORY_1 || "",
+      ENV.PODCAST_CATEGORY_2 || ""
     ].filter(Boolean),
-    fundingUrl: process.env.funding_url || "",
-    fundingText: process.env.funding_text || "",
+    fundingUrl: ENV.funding_url || "",
+    fundingText: ENV.funding_text || "",
 
     // Atom self-link (feed URL). Strongly recommended for PSP-1.
     // Prefer explicit feed URL env, fallback to RSS feeds base if set.
     rssSelfLink:
-      stripQuotes(process.env.PODCAST_RSS_FEED_URL || "") ||
+      stripQuotes(ENV.PODCAST_RSS_FEED_URL || "") ||
       stripQuotes(R2_PUBLIC_BASE_URL_RSS_RESOLVED || ""),
 
     // Podcasting 2.0 / PSP-1 recommended:
     // podcast:guid – globally unique ID for the show
     podcastGuid:
-      stripQuotes(process.env.PODCAST_GUID || "") ||
-      stripQuotes(process.env.PODCAST_LINK || "") || // fallback
+      stripQuotes(ENV.PODCAST_GUID || "") ||
+      stripQuotes(ENV.PODCAST_LINK || "") || // fallback
       "turing-torch-ai-weekly",
 
     // podcast:locked – protect feed from unauthorised import
     podcastLocked, // "yes" or "no"
     podcastLockedOwner:
-      process.env.PODCAST_LOCKED_OWNER_EMAIL ||
-      process.env.PODCAST_OWNER_EMAIL ||
+      ENV.PODCAST_LOCKED_OWNER_EMAIL ||
+      ENV.PODCAST_OWNER_EMAIL ||
       "",
 
     // generator – recommended by PSP to identify the tool building the feed
     generator:
-      process.env.PODCAST_GENERATOR ||
+      ENV.PODCAST_GENERATOR ||
       "Turing Podcast Suite (Node.js, PSP-1 compatible)"
   };
 

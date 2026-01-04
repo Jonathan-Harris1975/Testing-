@@ -9,6 +9,7 @@
 // - Optional: AUTO_CALL=yes → notify PodcastIndex Hub automatically
 // ============================================================
 
+import { ENV } from "../../scripts/envBootstrap.js";
 import { listKeys, getObjectAsText, putObject, R2_PUBLIC_BASE_URL_RSS_RESOLVED } from "../shared/utils/r2-client.js";
 import { info, warn, error } from "../../logger.js";
 import { generateFeedXML } from "./generateFeed.js";
@@ -24,7 +25,7 @@ const RSS_KEY = "turing-torch.xml";
 
 // Feed URL for PodcastIndex notifications
 const FEED_URL =
-  process.env.PODCAST_RSS_FEED_URL ||
+  ENV.PODCAST_RSS_FEED_URL ||
   `${R2_PUBLIC_BASE_URL_RSS_RESOLVED || ""}/turing-torch.xml`;
 
 export async function runRssFeedCreator() {
@@ -109,7 +110,7 @@ export async function runRssFeedCreator() {
   // PodcastIndex Auto Notify (if enabled)
   // ------------------------------------------------------------
   const shouldAutoCall =
-    String(process.env.AUTO_CALL || "").toLowerCase() === "yes";
+    String(ENV.AUTO_CALL || "").toLowerCase() === "yes";
 
   if (!shouldAutoCall) {
     info("AUTO_CALL disabled — PodcastIndex Hub NOT notified.");
@@ -121,7 +122,7 @@ export async function runRssFeedCreator() {
   });
 
   try {
-    const res = await notifyHubByUrl(process.env.PODCAST_LINK);
+    const res = await notifyHubByUrl(ENV.PODCAST_LINK);
     info("📡 PodcastIndex Hub notified successfully!", {
       result: res?.status,
       feedUrl: FEED_URL,
