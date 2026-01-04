@@ -6,8 +6,7 @@
 // ============================================================
 
 import { execSync } from "child_process";
-import { log, info, debug } from "../logger.js";
-import fs from "fs";
+import { info, debug, error } from "../logger.js";
 
 function run(cmd, label, { optional = false } = {}) {
   try {
@@ -19,21 +18,8 @@ function run(cmd, label, { optional = false } = {}) {
       info(`⚠️ ${label} skipped or not required.`);
       return;
     }
-    log.error(`❌ ${label} failed: ${err.message}`);
+    error(`❌ ${label} failed: ${err.message}`);
     process.exit(1);
-  }
-}
-
-// Quick static check for illegal #shared imports
-function needsImportFix() {
-  try {
-    execSync(
-      `grep -R "#shared/" services | grep -v "#shared/utils/"`,
-      { stdio: "ignore" }
-    );
-    return true; // grep found matches
-  } catch {
-    return false; // no matches
   }
 }
 
@@ -45,19 +31,19 @@ function needsImportFix() {
   run("node ./scripts/envBootstrap.js", "Environment Bootstrap");
 
   
-  // 3️⃣ Initialize RSS feed data into R2 (critical)
+  // 2️⃣ Initialize RSS feed data into R2 (critical)
   run(
     "node ./services/rss-feed-creator/startup/rss-init.js",
     "RSS Init"
   );
 
-  // 4️⃣ Perform runtime sanity checks
+  // 3️⃣ Perform runtime sanity checks
   run("node ./scripts/startupCheck.js", "Startup Check");
 
-  // 5️⃣ Validate temp storage + Cloudflare R2 connectivity
+  // 4️⃣ Validate temp storage + Cloudflare R2 connectivity
   run("node ./scripts/tempStorage.js", "R2 Check");
 
-  // 6️⃣ Launch the main web server
+  // 5️⃣ Launch the main web server
   run("node ./server.js", "Start Server");
 
   debug("---------------------------------------------");
