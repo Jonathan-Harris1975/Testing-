@@ -1,40 +1,57 @@
 // services/shared/utils/r2-client.js
-import { S3Client } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { ENV } from "../../../scripts/envBootstrap.js";
 
-/**
- * Bomb-proof R2 client:
- * - No top-level async/await (so no ESM syntax traps)
- * - No dynamic import (so no 'Unexpected reserved word')
- * - Reads from ENV (which is import-safe in CI)
- * - Creates the S3 client lazily the first time it's needed
- */
+const client = new S3Client({
+  region: ENV.r2.region,
+  endpoint: ENV.r2.endpoint,
+  credentials: {
+    accessKeyId: ENV.r2.accessKeyId,
+    secretAccessKey: ENV.r2.secretAccessKey,
+  },
+});
 
-let _client = null;
+/* ============================================================
+   Helpers
+============================================================ */
 
-function assertR2Env() {
-  const { endpoint, region, accessKeyId, secretAccessKey, buckets } = ENV.r2 || {};
-  if (!endpoint || !accessKeyId || !secretAccessKey) {
-    throw new Error("R2 credentials missing – check R2_ENDPOINT / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY");
-  }
-  if (!region) {
-    throw new Error("R2 region missing – check R2_REGION");
-  }
-  if (!buckets || typeof buckets !== "object") {
-    throw new Error("R2 buckets not configured – check envBootstrap ENV.r2.buckets");
-  }
-  return { endpoint, region, accessKeyId, secretAccessKey, buckets };
+async function streamToString(stream) {
+  const chunks = [];
+  for await (const chunk of stream) chunks.push(chunk);
+  return Buffer.concat(chunks).toString("utf-8");
 }
 
-export function getR2Client() {
-  if (_client) return _client;
+/* ============================================================
+   Public API (CANONICAL)
+============================================================ */
 
-  const { endpoint, region, accessKeyId, secretAccessKey } = assertR2Env();
+export async function getObjectAsText(bucket, key) {
+  const res = await client.send(
+    new GetObjectCommand({ Bucket: bucket, Key: key })
+  );
+  return streamToString(res.Body);
+}
 
-  _client = new S3Client({
-    region,
-    endpoint,
-    credentials: { accessKeyId, secretAccessKey },
+export async function putJson(bucket, key, data) {
+  await client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: JSON.stringify(data, null, 2),
+      ContentType: "application/json",
+    })
+  );
+}
+
+/* ============================================================
+   Existing exports (unchanged)
+============================================================ */
+
+export async function ensureBucket() {
+  // no-op for R2 (buckets must already exist)
+}
+
+export { client };    credentials: { accessKeyId, secretAccessKey },
   });
 
   return _client;
