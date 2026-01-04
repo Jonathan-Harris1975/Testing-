@@ -3,12 +3,13 @@ import { info } from "../../../logger.js";
 import { ensureBucketKey } from "../../shared/utils/r2-client.js";
 
 /**
- * RSS bootstrap must be SIDE-EFFECT FREE.
- * Only validate config and log resolved buckets.
+ * RSS bootstrap should be SIDE-EFFECT FREE.
+ * We do not attempt to create buckets (R2 buckets are provisioned in Cloudflare).
+ * We only validate + log resolved bucket names.
  */
 export async function ensureR2Sources() {
   for (const key of ["rss", "podcastRss"]) {
-    const bucket = await ensureBucketKey(key);
+    const bucket = ensureBucketKey(key);
     info(`🪣 R2 bucket resolved: ${key} → ${bucket}`);
   }
 }
