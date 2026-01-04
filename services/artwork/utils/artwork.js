@@ -6,6 +6,7 @@
 // This runs separately from the main ai-service.js model routing.
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import OpenAI from "openai";
 import { warn, error } from "../../../logger.js";
 
@@ -17,7 +18,7 @@ const REQUIRED = [
   "OPENROUTER_ART"  // model name for image generation
 ];
 
-const missing = REQUIRED.filter(k => !process.env[k] || process.env[k].trim() === "");
+const missing = REQUIRED.filter(k => !ENV[k] || ENV[k].trim() === "");
 
 if (missing.length > 0) {
   // Do NOT crash the entire suite — warn and disable artwork generation.
@@ -28,9 +29,9 @@ if (missing.length > 0) {
 // ⚙️ Config
 // ------------------------------------------------------------
 const cfg = {
-  key: process.env.OPENROUTER_API_KEY_ART || "",
+  key: ENV.OPENROUTER_API_KEY_ART || "",
   baseURL: "https://openrouter.ai/api/v1",
-  model: process.env.OPENROUTER_ART || "google/gemini-2.5-flash-image-preview:exp",
+  model: ENV.OPENROUTER_ART || "google/gemini-2.5-flash-image-preview:exp",
 };
 
 const client = new OpenAI({

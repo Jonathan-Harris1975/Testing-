@@ -1,10 +1,11 @@
 // services/artwork/utils/io.js
+import { ENV } from "../../../scripts/envBootstrap.js";
 import { putObject, putJson } from "../../shared/utils/r2-client.js";
 import { info, error } from "../../../logger.js";
 
-const ART_BUCKET  = process.env.R2_BUCKET_ART;
-const META_BUCKET = process.env.R2_BUCKET_META;
-const ART_PUBLIC  = process.env.R2_PUBLIC_BASE_URL_ART;
+const ART_BUCKET  = ENV.R2_BUCKET_ART;
+const META_BUCKET = ENV.R2_BUCKET_META;
+const ART_PUBLIC  = ENV.R2_PUBLIC_BASE_URL_ART;
 
 function requireEnv(name, val) {
   if (!val) throw new Error(`Missing required env: ${name}`);
