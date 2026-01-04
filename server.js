@@ -1,4 +1,5 @@
 // server.js
+import { ENV } from "scripts/envBootstrap.js";
 import express from "express";
 import cors from "cors";
 import { info, debug, error } from "./logger.js";
@@ -28,8 +29,8 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ ok: false, error: "Internal error" });
 });
 
-// Koyeb requires process.env.PORT
-const PORT = process.env.PORT || 3000;
+// Koyeb requires ENV.PORT
+const PORT = ENV.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
   info("🟩 AI Management Suite started on port " + PORT);
