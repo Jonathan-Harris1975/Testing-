@@ -2,6 +2,7 @@
 // 🎨 Artwork Generator — Express Route + Function Export
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import express from "express";
 import fetch from "node-fetch";
 import { putObject } from "../../shared/utils/r2-client.js";
@@ -19,18 +20,18 @@ export async function generateArtwork(sessionId, prompt = '') {
   }
 
   const safeTitle = encodeURIComponent(
-    process.env.APP_TITLE || "Turing's Torch: AI Weekly Artwork"
+    ENV.APP_TITLE || "Turing's Torch: AI Weekly Artwork"
   );
 
   const headers = {
-    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY_ART}`,
+    Authorization: `Bearer ${ENV.OPENROUTER_API_KEY_ART}`,
     "Content-Type": "application/json",
-    "HTTP-Referer": process.env.APP_URL || "https://jonathan-harris.online",
+    "HTTP-Referer": ENV.APP_URL || "https://jonathan-harris.online",
     "X-Title": safeTitle,
   };
 
   const body = JSON.stringify({
-    model: process.env.OPENROUTER_ART || "google/gemini-2.5-flash-image",
+    model: ENV.OPENROUTER_ART || "google/gemini-2.5-flash-image",
     messages: [
       {
         role: "user",
@@ -60,7 +61,7 @@ export async function generateArtwork(sessionId, prompt = '') {
 
     await putObject("art", key, buffer, "image/png");
 
-    const publicUrl = `${process.env.R2_PUBLIC_BASE_URL_ART}/${encodeURIComponent(key)}`;
+    const publicUrl = `${ENV.R2_PUBLIC_BASE_URL_ART}/${encodeURIComponent(key)}`;
     info("🎨 Artwork saved to R2", { sessionId, key, publicUrl });
 
     return publicUrl;
