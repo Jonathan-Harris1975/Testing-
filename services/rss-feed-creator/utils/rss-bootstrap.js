@@ -1,6 +1,6 @@
 // services/rss-feed-creator/utils/rss-bootstrap.js
-import { info } from "#logger.js";
-import { ensureBucket } from "#shared/r2-client.js";
+import { info } from "../../shared/logger.js";
+import { ensureBucket } from "../../shared/r2-client.js";
 import { ENV } from "../../../scripts/envBootstrap.js";
 
 export async function ensureR2Sources() {
