@@ -2,6 +2,7 @@
 // 🧠 RSS Feed Creator — Gen-X Tone, Long-Form Prompt (OpenRouter Optimized)
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import { warn } from "../../../logger.js";
 //
 // Automatically pulls summary length limits from environment vars:
@@ -15,13 +16,13 @@ import { warn } from "../../../logger.js";
 // ENV CONFIG
 // ─────────────────────────────────────────────
 const MIN_SUMMARY_CHARS =
-  Number(process.env.MIN_SUMMARY_CHARS) > 0
-    ? Number(process.env.MIN_SUMMARY_CHARS)
+  Number(ENV.MIN_SUMMARY_CHARS) > 0
+    ? Number(ENV.MIN_SUMMARY_CHARS)
     : 300;
 
 const MAX_SUMMARY_CHARS =
-  Number(process.env.MAX_SUMMARY_CHARS) > 0
-    ? Number(process.env.MAX_SUMMARY_CHARS)
+  Number(ENV.MAX_SUMMARY_CHARS) > 0
+    ? Number(ENV.MAX_SUMMARY_CHARS)
     : 1100;
 
 // ─────────────────────────────────────────────

@@ -5,12 +5,13 @@
 // Designed to be import-safe and isolated from fetchFeeds.js.
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import fs from "fs";
 import path from "path";
 import { info, error , debug} from "../../../logger.js";
 import { getObjectAsText } from "../../shared/utils/r2-client.js";
 
-const R2_BUCKET = process.env.R2_BUCKET_RSS_FEEDS || "rss-feeds";
+const R2_BUCKET = ENV.R2_BUCKET_RSS_FEEDS || "rss-feeds";
 
 /**
  * Read text file from local filesystem or Cloudflare R2.

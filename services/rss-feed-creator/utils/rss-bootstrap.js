@@ -1,3 +1,4 @@
+import { ENV } from "../../../scripts/envBootstrap.js";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -42,8 +43,8 @@ async function readLocalFile(filename) {
  */
 export async function ensureR2Sources() {
   const bucket =
-    process.env.R2_BUCKET_RSS_FEEDS ||
-    process.env.R2_BUCKET_PODCAST ||
+    ENV.R2_BUCKET_RSS_FEEDS ||
+    ENV.R2_BUCKET_PODCAST ||
     "rss-feeds";
 
   debug(`🪣 Using R2 bucket: ${bucket}`);
@@ -95,8 +96,8 @@ export async function ensureR2Sources() {
  */
 export async function saveRotation(nextIndex) {
   const bucket =
-    process.env.R2_BUCKET_RSS_FEEDS ||
-    process.env.R2_BUCKET_PODCAST ||
+    ENV.R2_BUCKET_RSS_FEEDS ||
+    ENV.R2_BUCKET_PODCAST ||
     "rss-feeds";
 
   await putJson(bucket, ROTATION_KEY, { lastIndex: nextIndex });

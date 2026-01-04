@@ -5,6 +5,7 @@
 // and parses each selected feed into article items.
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import Parser from "rss-parser";
 import { info, error,debug} from "../../../logger.js";
 import { loadRotationState, saveFeedRotation } from "./feedRotationManager.js";
@@ -13,10 +14,10 @@ import { readLocalOrR2File } from "./fileReader.js";
 const parser = new Parser();
 
 // Tunables
-const MAX_RSS_FEEDS_PER_RUN = Number(process.env.MAX_RSS_FEEDS_PER_RUN) || 5;
-const MAX_URL_FEEDS_PER_RUN = Number(process.env.MAX_URL_FEEDS_PER_RUN) || 1;
-const MAX_ITEMS_PER_FEED = Number(process.env.MAX_ITEMS_PER_FEED) || 20; // safety cap
-const FEED_CUTOFF_HOURS = Number(process.env.FEED_CUTOFF_HOURS) || 48; // default 48 hours
+const MAX_RSS_FEEDS_PER_RUN = Number(ENV.MAX_RSS_FEEDS_PER_RUN) || 5;
+const MAX_URL_FEEDS_PER_RUN = Number(ENV.MAX_URL_FEEDS_PER_RUN) || 1;
+const MAX_ITEMS_PER_FEED = Number(ENV.MAX_ITEMS_PER_FEED) || 20; // safety cap
+const FEED_CUTOFF_HOURS = Number(ENV.FEED_CUTOFF_HOURS) || 48; // default 48 hours
 
 function parseList(raw = "") {
   return raw

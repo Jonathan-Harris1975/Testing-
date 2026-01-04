@@ -12,6 +12,7 @@
 // - We do NOT publish raw feed summaries as a fallback.
 // ============================================================
 
+import { ENV } from "../../../scripts/envBootstrap.js";
 import crypto from "crypto";
 import { debug, error, warn } from "../../../logger.js";
 import { resilientRequest } from "../../shared/utils/ai-service.js";
@@ -21,9 +22,9 @@ import { shortenUrl } from "./shortio.js";
 // ─────────────────────────────────────────────
 // ENV TUNABLES
 // ─────────────────────────────────────────────
-const MIN_SOURCE_CHARS = Number(process.env.RSS_MIN_SOURCE_CHARS || 220);
-const TOPIC_GUARD_MIN_OVERLAP = Number(process.env.RSS_TOPIC_GUARD_MIN_OVERLAP || 0.12);
-const TOPIC_GUARD_MIN_SHARED = Number(process.env.RSS_TOPIC_GUARD_MIN_SHARED || 2);
+const MIN_SOURCE_CHARS = Number(ENV.RSS_MIN_SOURCE_CHARS || 220);
+const TOPIC_GUARD_MIN_OVERLAP = Number(ENV.RSS_TOPIC_GUARD_MIN_OVERLAP || 0.12);
+const TOPIC_GUARD_MIN_SHARED = Number(ENV.RSS_TOPIC_GUARD_MIN_SHARED || 2);
 
 // ─────────────────────────────────────────────
 // LIGHT HTML → TEXT NORMALISER
