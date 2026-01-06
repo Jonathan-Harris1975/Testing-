@@ -3,15 +3,16 @@
 // ============================================================
 
 import pino from "pino";
+import { ENV } from "./scripts/envBootstrap.js";
 
-const isProd = process.env.NODE_ENV === "production" || process.env.SHIPER === "true";
+const isProd = ENV.core.NODE_ENV === "production" || process.env.SHIPER === "true";
 
 let loggerInstance = globalThis.__AI_PODCAST_LOGGER__;
 
 if (!loggerInstance) {
   if (isProd) {
     loggerInstance = pino({
-      level: process.env.LOG_LEVEL || "info",
+      level: ENV.core.LOG_LEVEL || "info",
       base: null,
       timestamp: false,
       formatters: {
@@ -31,7 +32,7 @@ if (!loggerInstance) {
     });
   } else {
     loggerInstance = pino({
-      level: process.env.LOG_LEVEL || "debug",
+      level: ENV.core.LOG_LEVEL || "debug",
       base: { service: "AI-management-suite" },
       timestamp: pino.stdTimeFunctions.isoTime,
       transport: {
@@ -66,7 +67,7 @@ const log = loggerInstance;
 // Wrapper functions with proper msg parameter
 
 // Route debug logging (hidden unless DEBUG_ROUTES=true)
-const isDebugRoutes = process.env.DEBUG_ROUTES === "true";
+const isDebugRoutes = ENV.core.DEBUG_ROUTES === true;
 export function safeRouteLog(obj = {}) {
   if (!isDebugRoutes) return;
   log.info(obj, "debug.route");
