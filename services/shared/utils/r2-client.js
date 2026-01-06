@@ -13,9 +13,9 @@ import {
 import { ENV } from "../../../scripts/envBootstrap.js";
 import { log } from "../../../logger.js";
 
-// ------------------------------------------------------------
-// 🧠 Client
-// ------------------------------------------------------------
+/* ============================================================
+   🧠 Client
+============================================================ */
 export const s3 = new S3Client({
   region: ENV.r2.region || "auto",
   endpoint: ENV.r2.endpoint,
@@ -25,27 +25,43 @@ export const s3 = new S3Client({
   },
 });
 
-// ------------------------------------------------------------
-// 🪣 Buckets + Public URLs (authoritative)
-// ------------------------------------------------------------
+/* ============================================================
+   🪣 Buckets + Public URLs (authoritative)
+============================================================ */
 export const R2_BUCKETS = ENV.r2.buckets;
 export const R2_PUBLIC_URLS = ENV.r2.publicBase;
 
-// ------------------------------------------------------------
-// 🧩 Validation
-// ------------------------------------------------------------
+/* ============================================================
+   🔁 Phase-3 / Legacy compatibility exports (REQUIRED)
+============================================================ */
+// These are still imported by multiple services
+export const R2_BUCKET_RAW_AUDIO = R2_BUCKETS.chunks;
+export const R2_BUCKET_RAW_TEXT_KEY = R2_BUCKETS.rawText;
+export const R2_BUCKET_PODCAST_KEY = R2_BUCKETS.podcast;
+
+export const R2_PUBLIC_BASE_URL_PODCAST_RESOLVED =
+  R2_PUBLIC_URLS.podcast;
+
+export const R2_PUBLIC_BASE_URL_RSS_RESOLVED =
+  R2_PUBLIC_URLS.rss;
+
+/* ============================================================
+   🧩 Validation
+============================================================ */
 export function ensureBucketKey(bucketKey) {
   const bucket = R2_BUCKETS[bucketKey];
   if (!bucket) {
     const valid = Object.keys(R2_BUCKETS).join(", ");
-    throw new Error(`❌ Unknown R2 bucket key '${bucketKey}'. Valid: ${valid}`);
+    throw new Error(
+      `❌ Unknown R2 bucket key '${bucketKey}'. Valid keys: ${valid}`
+    );
   }
   return bucket;
 }
 
-// ------------------------------------------------------------
-// ⚙️ Upload / Download
-// ------------------------------------------------------------
+/* ============================================================
+   ⚙️ Upload / Download
+============================================================ */
 export async function uploadBuffer(
   bucketKey,
   key,
@@ -97,9 +113,9 @@ export async function getObjectAsText(bucketKey, key) {
   return Buffer.concat(chunks).toString("utf-8");
 }
 
-// ------------------------------------------------------------
-// 🧰 Utilities
-// ------------------------------------------------------------
+/* ============================================================
+   🧰 Utilities
+============================================================ */
 export async function listKeys(bucketKey, prefix = "") {
   const Bucket = ensureBucketKey(bucketKey);
   const { Contents } = await s3.send(
@@ -116,9 +132,9 @@ export async function deleteObject(bucketKey, key) {
   log.info("🗑️ R2 object deleted", { bucket: Bucket, key });
 }
 
-// ------------------------------------------------------------
-// 🔁 Phase-3 / Legacy Compatibility (DO NOT REMOVE YET)
-// ------------------------------------------------------------
+/* ============================================================
+   🔁 Legacy aliases (DO NOT REMOVE YET)
+============================================================ */
 export const putObject = uploadBuffer;
 export const r2Put = uploadBuffer;
 
@@ -143,27 +159,38 @@ export function buildPublicUrl(bucketKey, key) {
   return `${base}/${encodeURIComponent(key)}`;
 }
 
-// ------------------------------------------------------------
-// 🧾 Startup Log (debug only)
-// ------------------------------------------------------------
+/* ============================================================
+   🧾 Startup Log (debug only)
+============================================================ */
 log.debug("r2-client.initialized", {
   endpoint: ENV.r2.endpoint,
   region: ENV.r2.region,
   buckets: Object.keys(R2_BUCKETS),
 });
 
-// ------------------------------------------------------------
-// 📦 Default Export (legacy-friendly)
-// ------------------------------------------------------------
+/* ============================================================
+   📦 Default Export (legacy-friendly)
+============================================================ */
 export default {
   s3,
   R2_BUCKETS,
   R2_PUBLIC_URLS,
+
+  // Phase-3 exports
+  R2_BUCKET_RAW_AUDIO,
+  R2_BUCKET_RAW_TEXT_KEY,
+  R2_BUCKET_PODCAST_KEY,
+  R2_PUBLIC_BASE_URL_PODCAST_RESOLVED,
+  R2_PUBLIC_BASE_URL_RSS_RESOLVED,
+
+  // Core API
   uploadBuffer,
   uploadText,
   getObjectAsText,
   listKeys,
   deleteObject,
+
+  // Legacy API
   putObject,
   putText,
   putJson,
