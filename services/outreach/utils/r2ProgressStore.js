@@ -9,13 +9,13 @@ const DEFAULT_KEY = "outreach/progress.json";
 function baseProgress() {
   return {
     lastProcessedIndex: 0,
-    batchSize: ENV.OUTREACH_BATCH_SIZE,
+    batchSize: ENV.outreach.OUTREACH_BATCH_SIZE,
     updatedAt: null
   };
 }
 
 export async function loadProgress() {
-  const key = ENV.OUTREACH_PROGRESS_KEY || DEFAULT_KEY;
+  const key = ENV.outreach.PROGRESS_KEY || DEFAULT_KEY;
 
   try {
     const txt = await getObjectAsText("metasystem", key);
@@ -27,7 +27,7 @@ export async function loadProgress() {
 }
 
 export async function saveProgress(progress) {
-  const key = ENV.OUTREACH_PROGRESS_KEY || DEFAULT_KEY;
+  const key = ENV.outreach.PROGRESS_KEY || DEFAULT_KEY;
 
   const payload = {
     ...baseProgress(),
