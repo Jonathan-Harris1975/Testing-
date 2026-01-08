@@ -16,13 +16,13 @@ import { warn } from "../../../logger.js";
 // ENV CONFIG
 // ─────────────────────────────────────────────
 const MIN_SUMMARY_CHARS =
-  Number(ENV.MIN_SUMMARY_CHARS) > 0
-    ? Number(ENV.MIN_SUMMARY_CHARS)
+  Number(ENV.tts.MIN_SUMMARY_CHARS) > 0
+    ? Number(ENV.tts.MIN_SUMMARY_CHARS)
     : 300;
 
 const MAX_SUMMARY_CHARS =
-  Number(ENV.MAX_SUMMARY_CHARS) > 0
-    ? Number(ENV.MAX_SUMMARY_CHARS)
+  Number(ENV.tts.MAX_SUMMARY_CHARS) > 0
+    ? Number(ENV.tts.MAX_SUMMARY_CHARS)
     : 1100;
 
 // ─────────────────────────────────────────────

@@ -1,8 +1,8 @@
 import { ENV } from "../../../scripts/envBootstrap.js";
 import fetch from 'node-fetch';
 
-const API_KEY = ENV.SHORTIO_API_KEY;
-const DOMAIN = ENV.SHORTIO_DOMAIN;
+const API_KEY = ENV.shortio.API_KEY;
+const DOMAIN = ENV.shortio.DOMAIN;
 
 export async function shortenUrl(originalURL) {
   if (!API_KEY || !DOMAIN || !originalURL) return originalURL;

@@ -10,14 +10,14 @@ import fs from "fs";
 import path from "path";
 import { info, error } from "../../../logger.js";
 import {  getObjectAsText, putJson,} from "../../shared/utils/r2-client.js";
-const R2_BUCKET = ENV.R2_BUCKET_RSS_FEEDS || "rss-feeds";
+const R2_BUCKET = ENV.r2.buckets.rss || "rss-feeds";
 
 const ROTATION_FILE = "data/feed-rotation.json";
 const RSS_FILE = "rss-feeds.txt";
 const URL_FILE = "url-feeds.txt";
 
-const MAX_RSS_FEEDS_PER_RUN = Number(ENV.MAX_RSS_FEEDS_PER_RUN) || 5;
-const MAX_URL_FEEDS_PER_RUN = Number(ENV.MAX_URL_FEEDS_PER_RUN) || 1;
+const MAX_RSS_FEEDS_PER_RUN = Number(ENV.rss.MAX_RSS_FEEDS_PER_RUN) || 5;
+const MAX_URL_FEEDS_PER_RUN = Number(ENV.rss.MAX_URL_FEEDS_PER_RUN) || 1;
 
 // ─────────────────────────────────────────────
 // Helpers

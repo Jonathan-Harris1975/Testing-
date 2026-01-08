@@ -22,9 +22,9 @@ import { shortenUrl } from "./shortio.js";
 // ─────────────────────────────────────────────
 // ENV TUNABLES
 // ─────────────────────────────────────────────
-const MIN_SOURCE_CHARS = Number(ENV.RSS_MIN_SOURCE_CHARS || 220);
-const TOPIC_GUARD_MIN_OVERLAP = Number(ENV.RSS_TOPIC_GUARD_MIN_OVERLAP || 0.12);
-const TOPIC_GUARD_MIN_SHARED = Number(ENV.RSS_TOPIC_GUARD_MIN_SHARED || 2);
+const MIN_SOURCE_CHARS = Number(ENV.rss.MIN_SOURCE_CHARS || 220);
+const TOPIC_GUARD_MIN_OVERLAP = Number(ENV.rss.TOPIC_GUARD_MIN_OVERLAP || 0.12);
+const TOPIC_GUARD_MIN_SHARED = Number(ENV.rss.TOPIC_GUARD_MIN_SHARED || 2);
 
 // ─────────────────────────────────────────────
 // LIGHT HTML → TEXT NORMALISER
