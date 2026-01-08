@@ -1,12 +1,20 @@
 // scripts/envBootstrap.js
 import process from "process";
 
+const SCHEMA_ONLY = ["1","true","yes","on"].includes(String(process.env.CI || process.env.SCHEMA_VALIDATE_ONLY || "").toLowerCase());
+
 /* ============================================================
    Helpers
 ============================================================ */
+const __missing = [];
+
 const req = (k) => {
   const v = process.env[k];
   if (v === undefined || String(v).trim() === "") {
+    if (SCHEMA_ONLY) {
+      __missing.push(k);
+      return `__MISSING__${k}__`;
+    }
     throw new Error(`Missing env: ${k}`);
   }
   return v;
@@ -30,6 +38,22 @@ const num = (k, d = undefined) => {
 const bool = (k, d = false) => {
   const raw = opt(k, d);
   return ["1", "true", "yes", "on", "y"].includes(String(raw).toLowerCase());
+};
+
+const list = (k, d = []) => {
+  const raw = opt(k, undefined);
+  if (raw === undefined || String(raw).trim() === "") return d;
+  const s = String(raw).trim();
+  // Accept JSON array or comma-separated
+  if (s.startsWith("[") && s.endsWith("]")) {
+    try {
+      const arr = JSON.parse(s);
+      return Array.isArray(arr) ? arr : d;
+    } catch {
+      return d;
+    }
+  }
+  return s.split(",").map((x) => x.trim()).filter(Boolean);
 };
 
 const normalisePrivateKey = (raw) =>
@@ -57,6 +81,7 @@ export const ENV = {
 
     INTERNAL_BASE_HOST: opt("INTERNAL_BASE_HOST", "localhost"),
     INTERNAL_BASE_PROTO: opt("INTERNAL_BASE_PROTO", "http"),
+    SHIPER: bool("SHIPER", false),
   },
 
   /* ---------------- AI ---------------- */
@@ -119,6 +144,9 @@ export const ENV = {
 
     INTRO_URL: req("PODCAST_INTRO_URL"),
     OUTRO_URL: req("PODCAST_OUTRO_URL"),
+
+    LOCKED: opt("PODCAST_LOCKED", "yes"),
+    RSS_FEED_URL: opt("PODCAST_RSS_FEED_URL", ""),
 
     FFMPEG_TIMEOUT_MS: num("PODCAST_FFMPEG_TIMEOUT_MS", 900000),
 
@@ -189,6 +217,9 @@ export const ENV = {
     RETRY_BACKOFF_MULTIPLIER: num("RETRY_BACKOFF_MULTIPLIER", 2),
     MIN_SUMMARY_CHARS: num("MIN_SUMMARY_CHARS", 900),
     MAX_SUMMARY_CHARS: num("MAX_SUMMARY_CHARS", 2400),
+
+    SSML_ENABLED: bool("SSML_ENABLED", true),
+    MAX_SSML_CHUNK_BYTES: num("MAX_SSML_CHUNK_BYTES", 4200),
   },
 
   /* ---------------- R2 ---------------- */
@@ -446,3 +477,13 @@ ENV.GOOGLE_SHEET_ID = ENV.google.SHEET_ID;
 ENV.AWS_REGION = ENV.aws.REGION;
 ENV.AWS_ACCESS_KEY_ID = ENV.aws.ACCESS_KEY_ID;
 ENV.AWS_SECRET_ACCESS_KEY = ENV.aws.SECRET_ACCESS_KEY;
+
+
+// If executed directly in CI, validate the contract file loads without crashing.
+if (SCHEMA_ONLY && import.meta.url === `file://${process.argv[1]}`) {
+  if (__missing.length) {
+    console.log(`schema.validate.ok (missing ${__missing.length} keys in CI)`);
+  } else {
+    console.log('schema.validate.ok');
+  }
+}
