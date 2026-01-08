@@ -29,9 +29,9 @@ if (missing.length > 0) {
 // ⚙️ Config
 // ------------------------------------------------------------
 const cfg = {
-  key: ENV.OPENROUTER_API_KEY_ART || "",
+  key: ENV.ai.providers.artwork.key || "",
   baseURL: "https://openrouter.ai/api/v1",
-  model: ENV.OPENROUTER_ART || "google/gemini-2.5-flash-image-preview:exp",
+  model: ENV.ai.providers.artwork.model || "google/gemini-2.5-flash-image-preview:exp",
 };
 
 const client = new OpenAI({
