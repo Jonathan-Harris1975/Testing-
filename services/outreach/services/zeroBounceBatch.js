@@ -14,7 +14,7 @@ export async function batchValidateEmails(emails = []) {
     (e) => typeof e === "string" && e.includes("@")
   );
 
-  if (!ENV.API_ZERO_KEY) {
+  if (!ENV.outreach.API_ZERO_KEY) {
     clean.forEach((e) =>
       resultMap.set(e, { status: "unknown", sub_status: "not_checked" })
     );
@@ -28,7 +28,7 @@ export async function batchValidateEmails(emails = []) {
       const res = await axios.post(
         `${ZERO_BASE}/batch-validate`,
         {
-          api_key: ENV.API_ZERO_KEY,
+          api_key: ENV.outreach.API_ZERO_KEY,
           email_batch: batch.map((email) => ({ email_address: email })),
         },
         { timeout: 30000 }
@@ -50,7 +50,7 @@ export async function batchValidateEmails(emails = []) {
     }
 
     if (i + BATCH_SIZE < clean.length) {
-      await wait(ENV.HUNTER_DELAY_MS);
+      await wait(ENV.outreach.HUNTER_DELAY_MS);
     }
   }
 

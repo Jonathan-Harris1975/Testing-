@@ -42,7 +42,7 @@ function saveProgress(progress) {
 ============================================================ */
 
 export async function runNextBatch() {
-  const keywords = ENV.OUTREACH_KEYWORDS || [];
+  const keywords = ENV.outreach.KEYWORDS || [];
   if (!Array.isArray(keywords) || keywords.length === 0) {
     info("ℹ️ No outreach keywords configured");
     return { processed: 0, done: true };
@@ -51,8 +51,8 @@ export async function runNextBatch() {
   const progress = loadProgress();
   let index = progress.lastProcessedIndex;
 
-  const batchSize = ENV.OUTREACH_BATCH_SIZE;
-  const delayMs = ENV.SERP_RATE_DELAY_MS;
+  const batchSize = ENV.outreach.OUTREACH_BATCH_SIZE;
+  const delayMs = ENV.outreach.SERP_RATE_DELAY_MS;
 
   let processed = 0;
 
