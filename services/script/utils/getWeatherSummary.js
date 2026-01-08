@@ -9,8 +9,8 @@ import { info, error , debug} from "../../../logger.js";
  * If the API fails, returns a stable, safe fallback.
  */
 export async function getWeatherSummary() {
-  const apiKey = ENV.RAPIDAPI_KEY;
-  const apiHost = ENV.RAPIDAPI_HOST || "weatherapi-com.p.rapidapi.com";
+  const apiKey = ENV.weather.RAPIDAPI_KEY;
+  const apiHost = ENV.weather.RAPIDAPI_HOST || "weatherapi-com.p.rapidapi.com";
   const location = "London";
 
   try {

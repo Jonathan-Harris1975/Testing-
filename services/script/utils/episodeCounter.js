@@ -15,7 +15,7 @@ const EPISODE_COUNTER_BUCKET = "metasystem";
 const EPISODE_COUNTER_KEY = "episode-counter.json";
 
 function isProductionEpisodeMode() {
-  return ENV.PODCAST_RSS_EP === "Yes";
+  return ENV.podcast.rss.EP_MODE === "Yes";
 }
 
 // Load counter
@@ -45,7 +45,7 @@ async function saveCounter(counter) {
 export async function getNextEpisodeNumber() {
   if (!isProductionEpisodeMode()) {
     log.info("episodeCounter: test mode active, not touching persistent counter", {
-      PODCAST_RSS_EP: ENV.PODCAST_RSS_EP,
+      PODCAST_RSS_EP: ENV.podcast.rss.EP_MODE,
     });
     return null;
   }

@@ -11,7 +11,7 @@ import {
   getOutroPromptFull,
 } from "./promptTemplates.js";
 import fetchFeedArticles from "./fetchFeeds.js";
-import { putText, putJson, buildPublicUrl } from "../../shared/utils/r2-client.js";
+import { uploadText, putJson, buildPublicUrl } from "../../shared/utils/r2-client.js";
 import { cleanTranscript } from "./textHelpers.js";
 import { calculateDuration } from "./durationCalculator.js";
 import { getWeatherSummary } from "./getWeatherSummary.js";
@@ -151,7 +151,7 @@ export async function generateComposedEpisode(sessionIdLike) {
   const rawTranscript = [intro, "", main, "", outro].join("\n");
   const edited = editAndFormat(rawTranscript);
 
-  const maxBytes = Number(ENV.MAX_SSML_CHUNK_BYTES || 4200);
+  const maxBytes = Number(ENV.tts.MAX_SSML_CHUNK_BYTES || 4200);
   const byteLen = (s) => Buffer.byteLength(s, "utf8");
   let ttsChunks = chunkText(edited, maxBytes);
 
@@ -171,13 +171,13 @@ export async function generateComposedEpisode(sessionIdLike) {
     ttsChunks = out;
   }
 
-  await putText("transcripts", `${id}.txt`, edited);
+  await uploadText("transcripts", `${id}.txt`, edited);
 
   const files = [];
   for (let i = 0; i < ttsChunks.length; i++) {
     const name = `${id}/chunk-${String(i + 1).padStart(3, "0")}.txt`;
     const body = ttsChunks[i];
-    await putText("rawtext", name, body);
+    await uploadText("rawtext", name, body);
     const url = buildPublicUrl("rawtext", name);
     files.push({ index: i + 1, bytes: byteLen(body), url });
   }

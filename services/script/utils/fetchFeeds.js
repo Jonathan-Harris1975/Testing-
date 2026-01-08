@@ -38,7 +38,7 @@ function calculateArticleScore(item) {
  * Returns: { items, feedUrl }
  */
 export default async function fetchFeedArticles(feedUrlArg, windowDays = 7) {
-  const feedUrl = feedUrlArg?.trim() || ENV.FEED_URL?.trim();
+  const feedUrl = feedUrlArg?.trim() || ENV.rss.FEED_URL?.trim();
 
   if (!feedUrl) {
     error("❌ No FEED_URL provided — set FEED_URL in environment or pass as arg.");
