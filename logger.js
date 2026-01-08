@@ -5,7 +5,7 @@
 import pino from "pino";
 import { ENV } from "./scripts/envBootstrap.js";
 
-const isProd = ENV.core.NODE_ENV === "production" || process.env.SHIPER === "true";
+const isProd = ENV.core.NODE_ENV === "production" || ENV.core.SHIPER === true;
 
 let loggerInstance = globalThis.__AI_PODCAST_LOGGER__;
 
