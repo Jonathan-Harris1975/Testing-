@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const payload = req.body || {};
-    const bucket = ENV.R2_BUCKET_ART;
+    const bucket = ENV.r2.buckets.art;
     if (!bucket) throw new Error("R2_BUCKET_ART not set");
 
     const key = `artwork/requests/${Date.now()}.json`;

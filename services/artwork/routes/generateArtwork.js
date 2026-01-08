@@ -5,7 +5,7 @@
 import { ENV } from "../../../scripts/envBootstrap.js";
 import express from "express";
 import fetch from "node-fetch";
-import { putObject } from "../../shared/utils/r2-client.js";
+import { uploadBuffer } from "../../shared/utils/r2-client.js";
 import { info, error } from "../../../logger.js";
 
 const router = express.Router();
@@ -20,18 +20,18 @@ export async function generateArtwork(sessionId, prompt = '') {
   }
 
   const safeTitle = encodeURIComponent(
-    ENV.APP_TITLE || "Turing's Torch: AI Weekly Artwork"
+    ENV.core.APP_TITLE || "Turing's Torch: AI Weekly Artwork"
   );
 
   const headers = {
-    Authorization: `Bearer ${ENV.OPENROUTER_API_KEY_ART}`,
+    Authorization: `Bearer ${ENV.ai.providers.artwork.key}`,
     "Content-Type": "application/json",
-    "HTTP-Referer": ENV.APP_URL || "https://jonathan-harris.online",
+    "HTTP-Referer": ENV.core.APP_URL || "https://jonathan-harris.online",
     "X-Title": safeTitle,
   };
 
   const body = JSON.stringify({
-    model: ENV.OPENROUTER_ART || "google/gemini-2.5-flash-image",
+    model: ENV.ai.providers.artwork.model || "google/gemini-2.5-flash-image",
     messages: [
       {
         role: "user",
@@ -59,9 +59,9 @@ export async function generateArtwork(sessionId, prompt = '') {
     const buffer = Buffer.from(imageData, "base64");
     const key = `${sessionId}.png`;
 
-    await putObject("art", key, buffer, "image/png");
+    await uploadBuffer("art", key, buffer, "image/png");
 
-    const publicUrl = `${ENV.R2_PUBLIC_BASE_URL_ART}/${encodeURIComponent(key)}`;
+    const publicUrl = `${ENV.r2.publicBase.art}/${encodeURIComponent(key)}`;
     info("🎨 Artwork saved to R2", { sessionId, key, publicUrl });
 
     return publicUrl;
