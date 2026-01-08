@@ -10,7 +10,7 @@
 // ============================================================
 
 import { ENV } from "../../scripts/envBootstrap.js";
-import { listKeys, getObjectAsText, putObject, R2_PUBLIC_BASE_URL_RSS_RESOLVED } from "../shared/utils/r2-client.js";
+import { listKeys, getObjectAsText, uploadBuffer, R2_PUBLIC_BASE_URL_RSS_RESOLVED } from "../shared/utils/r2-client.js";
 import { info, warn, error } from "../../logger.js";
 import { generateFeedXML } from "./generateFeed.js";
 import { notifyHubByUrl } from "../shared/utils/podcastIndexClient.js";
@@ -25,7 +25,7 @@ const RSS_KEY = "turing-torch.xml";
 
 // Feed URL for PodcastIndex notifications
 const FEED_URL =
-  ENV.PODCAST_RSS_FEED_URL ||
+  ENV.podcast.RSS_FEED_URL ||
   `${R2_PUBLIC_BASE_URL_RSS_RESOLVED || ""}/turing-torch.xml`;
 
 export async function runRssFeedCreator() {
@@ -90,7 +90,7 @@ export async function runRssFeedCreator() {
   // Upload RSS
   // ------------------------------------------------------------
   try {
-    await putObject(
+    await uploadBuffer(
       RSS_BUCKET_ALIAS,
       RSS_KEY,
       Buffer.from(xml, "utf-8"),
@@ -110,7 +110,7 @@ export async function runRssFeedCreator() {
   // PodcastIndex Auto Notify (if enabled)
   // ------------------------------------------------------------
   const shouldAutoCall =
-    String(ENV.AUTO_CALL || "").toLowerCase() === "yes";
+    String(ENV.core.AUTO_CALL || "").toLowerCase() === "yes";
 
   if (!shouldAutoCall) {
     info("AUTO_CALL disabled — PodcastIndex Hub NOT notified.");
@@ -122,7 +122,7 @@ export async function runRssFeedCreator() {
   });
 
   try {
-    const res = await notifyHubByUrl(ENV.PODCAST_LINK);
+    const res = await notifyHubByUrl(ENV.podcast.LINK);
     info("📡 PodcastIndex Hub notified successfully!", {
       result: res?.status,
       feedUrl: FEED_URL,
