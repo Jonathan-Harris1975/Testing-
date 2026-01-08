@@ -15,22 +15,22 @@ import {
   SynthesizeSpeechCommand,
 } from "@aws-sdk/client-polly";
 import { info, error, warn,debug } from "../../../logger.js";
-import { putObject } from "../../shared/utils/r2-client.js";
+import { uploadBuffer } from "../../shared/utils/r2-client.js";
 import pLimit from "p-limit";
 
 // ------------------------------------------------------------
 // ⚙️ Configuration
 // ------------------------------------------------------------
-const REGION = ENV.AWS_REGION;
-const VOICE_ID = ENV.POLLY_VOICE_ID;
-const CHUNKS_BUCKET = ENV.R2_BUCKET_CHUNKS;
-const PUBLIC_CHUNKS_BASE = ENV.R2_PUBLIC_BASE_URL_CHUNKS;
+const REGION = ENV.aws.REGION;
+const VOICE_ID = ENV.tts.POLLY_VOICE_ID;
+const CHUNKS_BUCKET = ENV.r2.buckets.chunks;
+const PUBLIC_CHUNKS_BASE = ENV.r2.publicBase.chunks;
 
-const MAX_CHARS = Number(ENV.MAX_POLLY_NATURAL_CHUNK_CHARS) || 2500;
-const CONCURRENCY = Number(ENV.TTS_CONCURRENCY) || 3;
-const MAX_CHUNK_RETRIES = Number(ENV.MAX_CHUNK_RETRIES) || 4;
-const RETRY_DELAY_MS = Number(ENV.RETRY_DELAY_MS) || 1200;
-const RETRY_BACKOFF_MULTIPLIER = Number(ENV.RETRY_BACKOFF_MULTIPLIER) || 2.1;
+const MAX_CHARS = Number(ENV.tts.MAX_CHARS) || 2500;
+const CONCURRENCY = Number(ENV.tts.CONCURRENCY) || 3;
+const MAX_CHUNK_RETRIES = Number(ENV.tts.MAX_CHUNK_RETRIES) || 4;
+const RETRY_DELAY_MS = Number(ENV.tts.RETRY_DELAY_MS) || 1200;
+const RETRY_BACKOFF_MULTIPLIER = Number(ENV.tts.RETRY_BACKOFF_MULTIPLIER) || 2.1;
 
 const polly = new PollyClient({ region: REGION });
 
@@ -96,7 +96,7 @@ async function processChunkWithRetry(sessionId, chunk, chunkNumber, attempt = 1)
     const audioBuffer = await synthesizeTextWithRetry(cleaned);
 
     const key = `${sessionId}/chunk-${String(chunkNumber).padStart(3, "0")}.mp3`;
-    await putObject(CHUNKS_BUCKET, key, audioBuffer, "audio/mpeg");
+    await uploadBuffer(CHUNKS_BUCKET, key, audioBuffer, "audio/mpeg");
 
     const url = `${PUBLIC_CHUNKS_BASE}/${encodeURIComponent(key)}`;
 

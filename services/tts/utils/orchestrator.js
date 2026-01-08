@@ -5,7 +5,7 @@
 import { ENV } from "../../../scripts/envBootstrap.js";
 import { info, error, debug } from "../../../logger.js";
 import { startKeepAlive, stopKeepAlive } from "../../shared/utils/keepalive.js";
-import { listKeys, getObject } from "../../shared/utils/r2-client.js";
+import { listKeys, getObjectAsText } from "../../shared/utils/r2-client.js";
 import { ttsProcessor } from "./ttsProcessor.js";
 import { mergeProcessor } from "./mergeProcessor.js";
 import { editingProcessor } from "./editingProcessor.js";
@@ -14,14 +14,14 @@ import { podcastProcessor } from "./podcastProcessor.js";
 /* ============================================================
    R2 configuration (authoritative)
 ============================================================ */
-const RAW_TEXT_BUCKET = ENV.R2_BUCKET_RAW_TEXT;
-const RAW_TEXT_BASE_URL = ENV.R2_PUBLIC_BASE_URL_RAW_TEXT;
+const RAW_TEXT_BUCKET = ENV.r2.buckets.rawText;
+const RAW_TEXT_BASE_URL = ENV.r2.publicBase.rawText;
 
-const FINAL_BUCKET = ENV.R2_BUCKET_PODCAST;
-const PUBLIC_BASE_URL_PODCAST = ENV.R2_PUBLIC_BASE_URL_PODCAST;
+const FINAL_BUCKET = ENV.r2.buckets.podcast;
+const PUBLIC_BASE_URL_PODCAST = ENV.r2.publicBase.podcast;
 
-if (!RAW_TEXT_BUCKET) throw new Error("Missing ENV.R2_BUCKET_RAW_TEXT");
-if (!FINAL_BUCKET) throw new Error("Missing ENV.R2_BUCKET_PODCAST");
+if (!RAW_TEXT_BUCKET) throw new Error("Missing ENV.r2.buckets.rawText");
+if (!FINAL_BUCKET) throw new Error("Missing ENV.r2.buckets.podcast");
 
 /* ============================================================
    📥 Load all text chunks from R2
@@ -46,7 +46,7 @@ async function loadTextChunksFromR2(sessionId) {
   const chunkList = [];
 
   for (const key of txtKeys) {
-    const buf = await getObject(RAW_TEXT_BUCKET, key);
+    const buf = await getObjectAsText(RAW_TEXT_BUCKET, key);
 
     if (!buf) {
       throw new Error(`Failed to download text chunk: ${key}`);

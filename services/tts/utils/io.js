@@ -2,15 +2,15 @@
 // Unified I/O helpers for TTS audio pipeline – central R2 + logger
 
 import { ENV } from "../../../scripts/envBootstrap.js";
-import { putObject, putJson, R2_BUCKET_RAW_AUDIO } from "../../shared/utils/r2-client.js";
+import { uploadBuffer, putJson, R2_BUCKET_RAW_AUDIO } from "../../shared/utils/r2-client.js";
 import { info, error } from "../../../logger.js";
 
 // Environment variables (required)
 const RAW_BUCKET     = R2_BUCKET_RAW_AUDIO;       // bucket key alias for raw audio
-const MERGED_BUCKET  = ENV.R2_BUCKET_MERGED;    // podcast-merged
-const META_BUCKET    = ENV.R2_BUCKET_META;      // podcast-meta
-const PODCAST_BUCKET = ENV.R2_BUCKET_PODCAST;   // podcast
-const PUBLIC_BASE    = ENV.R2_PUBLIC_BASE_URL_PODCAST; // base URL for public access
+const MERGED_BUCKET  = ENV.r2.buckets.merged;    // podcast-merged
+const META_BUCKET    = ENV.r2.buckets.meta;      // podcast-meta
+const PODCAST_BUCKET = ENV.r2.buckets.podcast;   // podcast
+const PUBLIC_BASE    = ENV.r2.publicBase.podcast; // base URL for public access
 
 function requireEnv(name, val) {
   if (!val) throw new Error(`Missing required env: ${name}`);
@@ -24,7 +24,7 @@ function requireEnv(name, val) {
  */
 export async function saveTtsChunk(audioBuffer, key) {
   requireEnv("R2_BUCKET_RAW", RAW_BUCKET);
-  await putObject(RAW_BUCKET, key, audioBuffer, "audio/mpeg");
+  await uploadBuffer(RAW_BUCKET, key, audioBuffer, "audio/mpeg");
   info("tts.chunk.put", { bucket: RAW_BUCKET, key, bytes: audioBuffer.length });
 }
 
@@ -35,7 +35,7 @@ export async function saveTtsChunk(audioBuffer, key) {
  */
 export async function saveMergedTts(audioBuffer, key) {
   requireEnv("R2_BUCKET_MERGED", MERGED_BUCKET);
-  await putObject(MERGED_BUCKET, key, audioBuffer, "audio/mpeg");
+  await uploadBuffer(MERGED_BUCKET, key, audioBuffer, "audio/mpeg");
   info("tts.merged.put", { bucket: MERGED_BUCKET, key, bytes: audioBuffer.length });
 }
 
@@ -59,7 +59,7 @@ export async function publishFinalTts(audioBuffer, key) {
   requireEnv("R2_BUCKET_PODCAST", PODCAST_BUCKET);
   requireEnv("R2_PUBLIC_BASE_URL_PODCAST", PUBLIC_BASE);
 
-  await putObject(PODCAST_BUCKET, key, audioBuffer, "audio/mpeg");
+  await uploadBuffer(PODCAST_BUCKET, key, audioBuffer, "audio/mpeg");
   info("tts.publish.put", { bucket: PODCAST_BUCKET, key, bytes: audioBuffer.length });
 
   const publicUrl = `${PUBLIC_BASE.replace(/\/+$/, "")}/${key.replace(/^\/+/, "")}`;

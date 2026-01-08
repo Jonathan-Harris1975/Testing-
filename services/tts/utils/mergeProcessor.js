@@ -18,13 +18,13 @@ const MERGED_BUCKET = "merged";
 // ------------------------------------------------------------
 // ⚙️ Environment-based tuning
 // ------------------------------------------------------------
-const DOWNLOAD_TIMEOUT_MS = Number(ENV.AI_TIMEOUT || 30000);
-const MAX_RETRIES = Number(ENV.MAX_CHUNK_RETRIES || 3);
+const DOWNLOAD_TIMEOUT_MS = Number(ENV.ai.TIMEOUT || 30000);
+const MAX_RETRIES = Number(ENV.tts.MAX_CHUNK_RETRIES || 3);
 const DOWNLOAD_RETRIES = MAX_RETRIES;
 const MERGE_RETRIES = MAX_RETRIES;
-const RETRY_DELAY_MS = Number(ENV.RETRY_DELAY_MS || 2000);
+const RETRY_DELAY_MS = Number(ENV.tts.RETRY_DELAY_MS || 2000);
 const RETRY_BACKOFF_MULTIPLIER =
-  Number(ENV.RETRY_BACKOFF_MULTIPLIER || 2);
+  Number(ENV.tts.RETRY_BACKOFF_MULTIPLIER || 2);
 
 // Merge smaller groups recursively
 const BATCH_SIZE = 2;

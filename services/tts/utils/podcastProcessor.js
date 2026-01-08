@@ -6,7 +6,7 @@
 import { ENV } from "../../../scripts/envBootstrap.js";
 import { spawn } from "node:child_process";
 import { info, warn, error, debug } from "../../../logger.js";
-import { putObject } from "../../shared/utils/r2-client.js";
+import { uploadBuffer } from "../../shared/utils/r2-client.js";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -47,8 +47,8 @@ async function safePutObject(bucketAlias, key, body, contentType) {
   }
 
   try {
-    if (ct) return await putObject(bucketAlias, key, body, ct);
-    return await putObject(bucketAlias, key, body);
+    if (ct) return await uploadBuffer(bucketAlias, key, body, ct);
+    return await uploadBuffer(bucketAlias, key, body);
   } catch (err) {
     const msg = String(err?.message || "");
     const headerErr =
@@ -63,7 +63,7 @@ async function safePutObject(bucketAlias, key, body, contentType) {
       error: err.message,
     });
 
-    return await putObject(bucketAlias, key, body);
+    return await uploadBuffer(bucketAlias, key, body);
   }
 }
 
@@ -82,11 +82,11 @@ function cleanup(files) {
 async function updateMetaFile(sessionId, finalBuffer, finalPath, podcastUrl) {
   const metaKey = `${sessionId}.json`;
 
-  const metaBase = ENV.R2_PUBLIC_BASE_URL_META || "";
-  const artBase = ENV.R2_PUBLIC_BASE_URL_ART || "";
+  const metaBase = ENV.r2.publicBase.meta || "";
+  const artBase = ENV.r2.publicBase.art || "";
   const transcriptBase =
-    ENV.R2_PUBLIC_BASE_URL_TRANSCRIPT ||
-    ENV.R2_PUBLIC_BASE_URL_RAW_TEXT ||
+    ENV.r2.publicBase.transcript ||
+    ENV.r2.publicBase.rawText ||
     "";
 
   const metaUrl = metaBase ? `${metaBase}/${metaKey}` : "";
@@ -160,7 +160,7 @@ async function updateMetaFile(sessionId, finalBuffer, finalPath, podcastUrl) {
 export async function podcastProcessor(sessionId, editedBufferIgnored) {
   info("🎚 Fetching edited audio from R2", { sessionId });
 
-  const editedUrl = `${ENV.R2_PUBLIC_BASE_URL_EDITED_AUDIO}/${sessionId}_edited.mp3`;
+  const editedUrl = `${ENV.r2.publicBase.edited}/${sessionId}_edited.mp3`;
 
   const res = await fetch(editedUrl);
   if (!res.ok) throw new Error("Failed to fetch edited audio from R2");
@@ -169,8 +169,8 @@ export async function podcastProcessor(sessionId, editedBufferIgnored) {
 
   info("🎧 Retrieved edited audio", { sessionId });
 
-  const introUrl = ENV.PODCAST_INTRO_URL;
-  const outroUrl = ENV.PODCAST_OUTRO_URL;
+  const introUrl = ENV.podcast.INTRO_URL;
+  const outroUrl = ENV.podcast.OUTRO_URL;
 
   const intro = `${TMP_DIR}/${sessionId}_intro.mp3`;
   const main = `${TMP_DIR}/${sessionId}_main.mp3`;
@@ -202,7 +202,7 @@ file '${outro}'
   const finalBuffer = fs.readFileSync(final);
 
   const podcastKey = `${sessionId}.mp3`;
-  const podcastUrl = `${ENV.R2_PUBLIC_BASE_URL_PODCAST}/${podcastKey}`;
+  const podcastUrl = `${ENV.r2.publicBase.podcast}/${podcastKey}`;
 
   await safePutObject("podcast", podcastKey, finalBuffer, "audio/mpeg");
 
