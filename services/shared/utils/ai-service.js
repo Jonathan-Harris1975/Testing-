@@ -26,28 +26,28 @@ import fetch from "node-fetch";
 // 🔧 Config
 // ---------------------------------------------
 const OPENROUTER_BASE =
-  ENV.OPENROUTER_API_BASE || "https://openrouter.ai/api/v1";
+  ENV.ai.OPENROUTER_API_BASE || "https://openrouter.ai/api/v1";
 const ENDPOINT = `${OPENROUTER_BASE}/chat/completions`;
 
-const DEFAULT_MAX_TOKENS = Number(ENV.AI_MAX_TOKENS ||
+const DEFAULT_MAX_TOKENS = Number(ENV.ai.MAX_TOKENS ||
   4096);
 
 const DEFAULT_TEMPERATURE = Number(
-  ENV.AI_TEMPERATURE ??
+  ENV.ai.TEMPERATURE ??
     aiConfig?.commonParams?.temperature ??
     0.7
 );
 
 const DEFAULT_TIMEOUT_MS = Number(
-  ENV.AI_TIMEOUT ??
+  ENV.ai.TIMEOUT ??
     aiConfig?.commonParams?.timeout ??
     45000
 );
 
-const DEFAULT_TOP_P = Number(ENV.AI_TOP_P || 1);
+const DEFAULT_TOP_P = Number(ENV.ai.TOP_P || 1);
 
-const MAX_RETRIES = Number(ENV.AI_MAX_RETRIES || 2); // per provider
-const RETRY_BASE_MS = Number(ENV.AI_RETRY_BASE_MS || 700);
+const MAX_RETRIES = Number(ENV.ai.MAX_RETRIES || 2); // per provider
+const RETRY_BASE_MS = Number(ENV.ai.RETRY_BASE_MS || 700);
 
 // ---------------------------------------------
 // 🧠 Session summary aggregation (console-only)

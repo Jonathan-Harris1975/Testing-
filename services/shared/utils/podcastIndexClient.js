@@ -29,10 +29,10 @@ const log = { info, warn, error, debug };
 
 const API_BASE = "https://api.podcastindex.org/api/1.0";
 
-const API_KEY = ENV.API_KEY_PODCAST_INDEX || "";
-const API_SECRET = ENV.API_SECRET_PODCAST_INDEX || "";
+const API_KEY = ENV.podcast.index.API_KEY || "";
+const API_SECRET = ENV.podcast.index.API_SECRET || "";
 const USER_AGENT =
-  ENV.PODCASTINDEX_USER_AGENT ||
+  ENV.podcast.USER_AGENT ||
   "TuringTorch/1.0 (+https://jonathan-harris.online)";
 
 function ensureConfig() {
