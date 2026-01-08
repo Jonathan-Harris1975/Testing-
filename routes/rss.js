@@ -1,6 +1,6 @@
 // /routes/rss.js — AI Podcast Suite (Final Stable 2025-10-11)
 import express from "express";
-import { getObject } from "../services/shared/utils/r2-client.js";
+import { getObjectAsText } from "../services/shared/utils/r2-client.js";
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.all("/", async (req, res) => {
 
   if (!isPost) {
     try {
-      const xml = await getObject("rss.xml");
+      const xml = await getObjectAsText("rss", "rss.xml");
       res.set("Content-Type", "application/rss+xml");
       res.send(
         xml || "<rss><channel><title>No RSS Found</title></channel></rss>"

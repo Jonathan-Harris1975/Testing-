@@ -10,9 +10,9 @@ import { info, error } from "../logger.js";
 const router = express.Router();
 
 function baseUrl() {
-  const port = ENV.PORT || 3000;
-  const host = ENV.INTERNAL_BASE_HOST || "127.0.0.1";
-  const proto = ENV.INTERNAL_BASE_PROTO || "http";
+  const port = ENV.core.PORT || 3000;
+  const host = ENV.core.INTERNAL_BASE_HOST || "127.0.0.1";
+  const proto = ENV.core.INTERNAL_BASE_PROTO || "http";
   return `${proto}://${host}:${port}`;
 }
 
