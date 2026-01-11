@@ -10,7 +10,6 @@
 // ============================================================
 
 import { ENV } from "../../scripts/envBootstrap.js";
-import { listKeys, getObjectAsText, uploadBuffer, R2_PUBLIC_BASE_URL_RSS_RESOLVED } from "../shared/utils/r2-client.js";
 import { info, warn, error } from "../../logger.js";
 import { generateFeedXML } from "./generateFeed.js";
 import { notifyHubByUrl } from "../shared/utils/podcastIndexClient.js";
@@ -24,9 +23,8 @@ const RSS_BUCKET_ALIAS = "podcastRss";
 const RSS_KEY = "turing-torch.xml";
 
 // Feed URL for PodcastIndex notifications
-const FEED_URL =
+const FEED_URL = ENV.podcast.LINK;
   ENV.podcast.RSS_FEED_URL ||
-  `${R2_PUBLIC_BASE_URL_RSS_RESOLVED || ""}/turing-torch.xml`;
 
 export async function runRssFeedCreator() {
   info("🚀 Starting RSS feed generation");
